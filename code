@@ -1,0 +1,336 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+app routing module ts
+
+#myGrid {
+    height: 100%;
+    width: 100%;
+  }
+   app component css
+
+<div id="myGrid" class="ag-theme-alpine" style="height: 100%; width: 100%;">
+  <ag-grid-angular  
+    style="width: 100%; height: 100%;"
+    [gridOptions]="gridOptions"
+    class="ag-theme-alpine">
+  </ag-grid-angular>
+</div>
+app component html
+
+spec ts 
+import { TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { AppComponent } from './app.component';
+
+describe('AppComponent', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        RouterModule.forRoot([])
+      ],
+      declarations: [
+        AppComponent
+      ],
+    }).compileComponents();
+  });
+
+  it('should create the app', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app).toBeTruthy();
+  });
+
+  it(`should have as title 'my-project'`, () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app.title).toEqual('my-project');
+  });
+
+  it('should render title', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, my-project');
+  });
+});
+app component ts 
+import { Component } from '@angular/core';
+import { ColDef, GridApi, GridOptions, ModuleRegistry, GridReadyEvent } from '@ag-grid-community/core';
+import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+
+ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule]);
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  private gridApi!: GridApi;
+
+  public gridOptions: GridOptions = {
+    columnDefs: [
+      { field: 'country', rowGroup: true, hide: true },
+      { field: 'year', rowGroup: true, hide: true },
+      { field: 'athlete' },
+      { field: 'sport' },
+      { field: 'gold' },
+      { field: 'silver' },
+      { field: 'bronze' },
+    ],
+    defaultColDef: {
+      flex: 1,
+      minWidth: 100,
+    },
+    autoGroupColumnDef: {
+      minWidth: 200,
+    },
+    onGridReady: this.onGridReady.bind(this)
+  };
+
+  private onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    this.loadData();
+  }
+
+  private loadData() {
+    fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
+      .then(response => response.json())
+      .then(data => {
+        this.gridApi.applyTransaction({ add: data });
+      });
+  }
+}
+app module ts 
+import { Component } from '@angular/core';
+import { ColDef, GridApi, GridOptions, ModuleRegistry, GridReadyEvent } from '@ag-grid-community/core';
+import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+
+ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule]);
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  private gridApi!: GridApi;
+
+  public gridOptions: GridOptions = {
+    columnDefs: [
+      { field: 'country', rowGroup: true, hide: true },
+      { field: 'year', rowGroup: true, hide: true },
+      { field: 'athlete' },
+      { field: 'sport' },
+      { field: 'gold' },
+      { field: 'silver' },
+      { field: 'bronze' },
+    ],
+    defaultColDef: {
+      flex: 1,
+      minWidth: 100,
+    },
+    autoGroupColumnDef: {
+      minWidth: 200,
+    },
+    onGridReady: this.onGridReady.bind(this)
+  };
+
+  private onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    this.loadData();
+  }
+
+  private loadData() {
+    fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
+      .then(response => response.json())
+      .then(data => {
+        this.gridApi.applyTransaction({ add: data });
+      });
+  }
+}
+index html 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>MyProject</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+main ts 
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+
+platformBrowserDynamic().bootstrapModule(AppModule, {
+  ngZoneEventCoalescing: true
+})
+  .catch(err => console.error(err));
+styles css
+/* Import ag-Grid styles with new paths */
+@import '@ag-grid-community/styles/ag-grid.css';
+@import '@ag-grid-community/styles/ag-theme-alpine.css';
+
+/* You can add global styles to this file, and also import other style files */
+angular json
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "my-project": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "standalone": false
+        },
+        "@schematics/angular:directive": {
+          "standalone": false
+        },
+        "@schematics/angular:pipe": {
+          "standalone": false
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/my-project",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public",
+                "output": "/"
+              }
+            ],
+            "styles": [
+              "src/styles.css", 
+              "node_modules/@ag-grid-community/styles/ag-grid.css",
+              "node_modules/@ag-grid-community/styles/ag-theme-alpine.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kB",
+                  "maximumError": "4kB"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "optimization": true,
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "vendorChunk": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "my-project:build:production"
+            },
+            "development": {
+              "browserTarget": "my-project:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "my-project:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public",
+                "output": "/"
+              }
+            ],
+            "styles": [
+              "src/styles.css",
+              "node_modules/@ag-grid-community/styles/ag-grid.css",
+              "node_modules/@ag-grid-community/styles/ag-theme-alpine.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "3b11aade-c8a2-4083-8324-a1fb9a0cb960"
+  }
+}
+
+
+
+
